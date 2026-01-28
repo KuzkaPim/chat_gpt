@@ -72,7 +72,7 @@ export const Form = ({
               className="size-11 flex bg-content-primary hover:bg-content-primary/90 justify-center items-center rounded-2xl transition active:scale-95 outline-none focus:ring focus:ring-primary"
             >
               <Mic
-                className={`${listening ? 'text-accent animate-pulse' : 'text-secondary'}`}
+                className={`${listening ? 'text-accent animate-pulse' : 'text-primary'}`}
                 size={22}
               />
             </button>
@@ -81,7 +81,7 @@ export const Form = ({
           <TextareaAutosize
             minRows={1}
             maxRows={6}
-            className="flex-1 box-border min-h-11 p-3 max-h-32 bg-content-primary border-none rounded-2xl transition placeholder:text-zinc-400 resize-none text-sm outline-none focus:ring focus:ring-primary"
+            className="flex-1 box-border min-h-11 p-3 max-h-32 bg-content-primary border-none rounded-2xl text-primary transition placeholder:text-primary/60 resize-none text-sm outline-none focus:ring focus:ring-primary"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Сообщение..."
@@ -99,7 +99,7 @@ export const Form = ({
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="size-11 flex justify-center items-center pr-0.5 bg-content-primary hover:bg-content-primary/90 text-secondary rounded-2xl transition active:scale-95 disabled:opacity-60 outline-none focus:ring focus:ring-primary"
+            className="size-11 flex justify-center items-center pr-0.5 bg-content-primary hover:bg-content-primary/90 text-primary rounded-2xl transition active:scale-95 disabled:opacity-60 outline-none focus:ring focus:ring-primary"
           >
             <Send size={22} />
           </button>
