@@ -22,6 +22,8 @@
     "prettier": "^3.8.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-speech-recognition": "^4.0.1",
+    "react-textarea-autosize": "^8.5.9",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
@@ -29,6 +31,8 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/react-speech-recognition": "^3.9.6",
+    "@types/react-textarea-autosize": "^8.0.0",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.5",
