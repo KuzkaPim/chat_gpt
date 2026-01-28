@@ -61,28 +61,22 @@ export const Form = ({
     }
   }, [transcript]);
 
-  if (!browserSupportsSpeechRecognition) {
-    return (
-      <div className="p-4 text-red-500">
-        Ваш браузер не поддерживает голосовой ввод. Попробуйте Chrome.
-      </div>
-    );
-  }
-
   return (
     <section className="fixed bottom-2 w-full">
       <Container>
         <form className="flex gap-1.5 sm:gap-2 items-end" onSubmit={handleSend}>
-          <button
-            type="button"
-            onClick={toggleRecording}
-            className="size-11 flex bg-content-primary hover:bg-content-primary/90 justify-center items-center rounded-2xl transition active:scale-95 outline-none focus:ring focus:ring-primary"
-          >
-            <Mic
-              className={`${listening ? 'text-accent animate-pulse' : 'text-secondary'}`}
-              size={22}
-            />
-          </button>
+          {browserSupportsSpeechRecognition && (
+            <button
+              type="button"
+              onClick={toggleRecording}
+              className="size-11 flex bg-content-primary hover:bg-content-primary/90 justify-center items-center rounded-2xl transition active:scale-95 outline-none focus:ring focus:ring-primary"
+            >
+              <Mic
+                className={`${listening ? 'text-accent animate-pulse' : 'text-secondary'}`}
+                size={22}
+              />
+            </button>
+          )}
 
           <TextareaAutosize
             minRows={1}
