@@ -1,14 +1,15 @@
 'use client';
 
-import { useChat } from '@ai-sdk/react';
 import dynamic from 'next/dynamic';
+
+import { useChat } from '@ai-sdk/react';
 import { useSpeechRecognition } from 'react-speech-recognition';
-import { ChatClient } from './sections';
+import { ChatClient, FormSkeleton } from './sections';
 import { useState } from 'react';
 
 const Form = dynamic(() => import('./sections').then((m) => m.Form), {
   ssr: false,
-  loading: () => <div className="p-4 text-center">Загрузка...</div>,
+  loading: () => <FormSkeleton />,
 });
 
 export const Chat = () => {
