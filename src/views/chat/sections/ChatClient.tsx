@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/src/shared/lib';
 import { Container } from '@/src/shared/ui';
 import { UIDataTypes, UIMessage, UITools } from 'ai';
 
@@ -7,16 +8,21 @@ interface ChatClientProps {
   messages: UIMessage<unknown, UIDataTypes, UITools>[];
   isLoading: boolean;
   taHeight: number;
+  isChatting: boolean;
 }
 
 export const ChatClient = ({
   messages,
   isLoading,
   taHeight,
+  isChatting,
 }: ChatClientProps) => {
   return (
     <section
-      className=" min-h-screen pt-2"
+      className={cn(
+        'min-h-screen scale-0 pt-2 transition duration-250 origin-top-right',
+        isChatting && 'scale-100'
+      )}
       style={{ paddingBottom: `${taHeight + 16}px` }}
     >
       <Container className="flex flex-col">

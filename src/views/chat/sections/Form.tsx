@@ -42,9 +42,9 @@ export const Form = ({
   const handleSend = (e?: React.SubmitEvent) => {
     e?.preventDefault();
 
-    stopRecording();
     if (!input.trim()) return;
 
+    stopRecording();
     sendMessage({ text: input });
 
     setInput('');
