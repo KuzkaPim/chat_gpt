@@ -25,9 +25,11 @@ export const Promo = ({ isChatting }: PromoProps) => {
         </div>
 
         <div className="relative z-10">
-          <h1 className="font-bold text-3xl">Привет!</h1>
-          <p className="font-bold text-5xl mt-4">Что бы вы хотели узнать?</p>
-          <p className="opacity-60 max-w-120 mx-auto mt-4">
+          <h1 className="font-bold text-xl sm:text-3xl">Привет!</h1>
+          <p className="font-bold text-3xl sm:text-5xl mt-4">
+            Что бы вы хотели узнать?
+          </p>
+          <p className="opacity-60 max-w-120 text-sm sm:text-md mx-auto mt-4">
             Используйте один из наиболее распространенных запросов ниже или
             задайте свой собственный вопрос.
           </p>
