@@ -29,7 +29,7 @@ export const Promo = ({ isChatting }: PromoProps) => {
           <p className="font-bold text-3xl sm:text-5xl mt-4">
             Что бы вы хотели узнать?
           </p>
-          <p className="opacity-60 max-w-120 text-sm sm:text-md mx-auto mt-4">
+          <p className="opacity-60 max-w-120 text-sm sm:text-lg mx-auto mt-4">
             Используйте один из наиболее распространенных запросов ниже или
             задайте свой собственный вопрос.
           </p>
