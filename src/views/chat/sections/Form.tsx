@@ -1,7 +1,7 @@
 import { Container } from '@/src/shared/ui';
 import TextareaAutosize from 'react-textarea-autosize';
 import { Mic, Send } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import SpeechRecognition from 'react-speech-recognition';
 
 interface FormProps {
@@ -11,6 +11,7 @@ interface FormProps {
   browserSupportsSpeechRecognition: boolean;
   isLoading: boolean;
   sendMessage: (message: { text: string }) => void;
+  setTaHeight: Dispatch<SetStateAction<number>>;
 }
 
 export const Form = ({
@@ -20,6 +21,7 @@ export const Form = ({
   browserSupportsSpeechRecognition,
   isLoading,
   sendMessage,
+  setTaHeight,
 }: FormProps) => {
   const [input, setInput] = useState('');
 
@@ -31,8 +33,16 @@ export const Form = ({
     }
   };
 
-  const handleSend = (e?: React.FormEvent) => {
+  const stopRecording = () => {
+    if (listening) {
+      SpeechRecognition.stopListening();
+    }
+  };
+
+  const handleSend = (e?: React.SubmitEvent) => {
     e?.preventDefault();
+
+    stopRecording();
     if (!input.trim()) return;
 
     sendMessage({ text: input });
@@ -66,7 +76,7 @@ export const Form = ({
           <button
             type="button"
             onClick={toggleRecording}
-            className="size-11 flex bg-content-primary hover:bg-content-primary/90 justify-center items-center rounded-2xl transition active:scale-95"
+            className="size-11 flex bg-content-primary hover:bg-content-primary/90 justify-center items-center rounded-2xl transition active:scale-95 outline-none focus:ring focus:ring-primary"
           >
             <Mic
               className={`${listening ? 'text-accent animate-pulse' : 'text-secondary'}`}
@@ -82,6 +92,8 @@ export const Form = ({
             onChange={(e) => setInput(e.target.value)}
             placeholder="Сообщение..."
             disabled={isLoading}
+            onFocus={stopRecording}
+            onHeightChange={(h) => setTaHeight(h)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -93,7 +105,7 @@ export const Form = ({
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="size-11 flex justify-center items-center pr-0.5 bg-content-primary hover:bg-content-primary/90 text-secondary rounded-2xl transition active:scale-95 disabled:opacity-60"
+            className="size-11 flex justify-center items-center pr-0.5 bg-content-primary hover:bg-content-primary/90 text-secondary rounded-2xl transition active:scale-95 disabled:opacity-60 outline-none focus:ring focus:ring-primary"
           >
             <Send size={22} />
           </button>

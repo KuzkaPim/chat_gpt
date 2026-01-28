@@ -4,6 +4,7 @@ import { useChat } from '@ai-sdk/react';
 import dynamic from 'next/dynamic';
 import { useSpeechRecognition } from 'react-speech-recognition';
 import { ChatClient } from './sections';
+import { useState } from 'react';
 
 const Form = dynamic(() => import('./sections').then((m) => m.Form), {
   ssr: false,
@@ -12,6 +13,7 @@ const Form = dynamic(() => import('./sections').then((m) => m.Form), {
 
 export const Chat = () => {
   const { messages, sendMessage, status } = useChat();
+  const [taHeight, setTaHeight] = useState(44);
   const {
     transcript,
     listening,
@@ -23,7 +25,11 @@ export const Chat = () => {
 
   return (
     <>
-      <ChatClient messages={messages} isLoading={isLoading} />
+      <ChatClient
+        messages={messages}
+        isLoading={isLoading}
+        taHeight={taHeight}
+      />
       <Form
         listening={listening}
         transcript={transcript}
@@ -31,6 +37,7 @@ export const Chat = () => {
         browserSupportsSpeechRecognition={browserSupportsSpeechRecognition}
         isLoading={isLoading}
         sendMessage={sendMessage}
+        setTaHeight={setTaHeight}
       />
     </>
   );
