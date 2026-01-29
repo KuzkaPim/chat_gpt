@@ -73,6 +73,7 @@ export const Form = ({
           {browserSupportsSpeechRecognition && (
             <button
               type="button"
+              aria-label="Голосовой ввод"
               onClick={toggleRecording}
               disabled={isLoading}
               className="size-12 flex bg-content-primary hover:bg-content-primary/90 justify-center items-center rounded-2xl transition active:scale-95 outline-none focus:ring focus:ring-primary"
@@ -105,6 +106,7 @@ export const Form = ({
           <div className="relative flex justify-center items-center">
             <button
               type="button"
+              aria-label="Остановить генерацию"
               onClick={stop}
               className={cn(
                 'z-0 scale-0 absolute size-10 flex justify-center items-center bg-content-primary hover:bg-content-primary/90 text-primary rounded-xl transition active:scale-95 disabled:opacity-60 outline-none focus:ring focus:ring-primary duration-250',
@@ -115,6 +117,7 @@ export const Form = ({
             </button>
             <button
               type="submit"
+              aria-label="Отправить сообщение"
               disabled={isLoading || !input.trim()}
               className="z-10 size-12 flex justify-center items-center pr-0.5 bg-content-primary hover:bg-content-primary/90 text-primary rounded-2xl transition active:scale-95 disabled:opacity-60 outline-none focus:ring focus:ring-primary"
             >
