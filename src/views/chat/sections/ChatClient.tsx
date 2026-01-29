@@ -2,21 +2,25 @@
 
 import { cn } from '@/src/shared/lib';
 import { Container } from '@/src/shared/ui';
-import { UIDataTypes, UIMessage, UITools } from 'ai';
+import { ChatStatus, UIDataTypes, UIMessage, UITools } from 'ai';
 
 interface ChatClientProps {
   messages: UIMessage<unknown, UIDataTypes, UITools>[];
-  isLoading: boolean;
+  status: ChatStatus;
   taHeight: number;
   isChatting: boolean;
+  error: Error | undefined;
 }
 
 export const ChatClient = ({
   messages,
-  isLoading,
+  status,
   taHeight,
   isChatting,
+  error,
 }: ChatClientProps) => {
+  const isLoading = status === 'submitted' || status === 'streaming';
+
   return (
     <section
       className={cn(
@@ -47,6 +51,14 @@ export const ChatClient = ({
           {isLoading && (
             <div className="text-xs text-content-primary animate-pulse font-medium">
               Печатает...
+            </div>
+          )}
+          {status === 'error' && error && (
+            <div className="p-3.5 rounded-2xl text-sm bg-content-primary text-primary mr-auto max-w-[85%] rounded-bl-sm">
+              <div className="text-xs opacity-70 mb-1 text-accent font-bold uppercase">
+                Ошибка
+              </div>
+              {error.message || 'Произошла неизвестная ошибка.'}
             </div>
           )}
         </ul>

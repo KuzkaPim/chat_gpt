@@ -13,7 +13,7 @@ const Form = dynamic(() => import('./sections').then((m) => m.Form), {
 });
 
 export const Chat = () => {
-  const { messages, sendMessage, status } = useChat();
+  const { messages, sendMessage, status, error, stop } = useChat();
   const [taHeight, setTaHeight] = useState(44);
   const [isChatting, setIsChatting] = useState(false);
   const {
@@ -22,8 +22,6 @@ export const Chat = () => {
     resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
-
-  const isLoading = status === 'submitted' || status === 'streaming';
 
   const submitMessage = (message: { text: string }) => {
     setIsChatting(true);
@@ -35,18 +33,20 @@ export const Chat = () => {
       <Promo isChatting={isChatting} />
       <ChatClient
         messages={messages}
-        isLoading={isLoading}
+        status={status}
         taHeight={taHeight}
         isChatting={isChatting}
+        error={error}
       />
       <Form
         listening={listening}
         transcript={transcript}
         resetTranscript={resetTranscript}
         browserSupportsSpeechRecognition={browserSupportsSpeechRecognition}
-        isLoading={isLoading}
+        status={status}
         sendMessage={submitMessage}
         setTaHeight={setTaHeight}
+        stop={stop}
       />
     </>
   );
