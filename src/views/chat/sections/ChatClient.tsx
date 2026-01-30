@@ -9,6 +9,9 @@ import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
+import { Check, Copy } from 'lucide-react';
+import { useState } from 'react';
+
 interface ChatClientProps {
   messages: UIMessage<unknown, UIDataTypes, UITools>[];
   status: ChatStatus;
@@ -16,6 +19,66 @@ interface ChatClientProps {
   isChatting: boolean;
   error: Error | undefined;
 }
+
+const CopyButton = ({
+  text,
+  className,
+}: {
+  text: string;
+  className?: string;
+}) => {
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(text);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      className={cn(
+        'p-1.5 rounded-lg transition hover:bg-black/10 text-inherit outline-none',
+        className
+      )}
+      aria-label="Копировать"
+    >
+      {isCopied ? <Check size={16} /> : <Copy size={16} />}
+    </button>
+  );
+};
+
+const CodeBlock = ({
+  language,
+  children,
+  ...props
+}: {
+  language: string;
+  children: React.ReactNode;
+}) => {
+  const codeText = String(children).replace(/\n$/, '');
+
+  return (
+    <div className="relative rounded-lg overflow-hidden mt-2! mb-2!">
+      <div className="absolute right-2 top-2 z-10">
+        <CopyButton
+          text={codeText}
+          className="bg-black/20 hover:bg-black/30 text-white opacity-100"
+        />
+      </div>
+      <SyntaxHighlighter
+        {...props}
+        style={vscDarkPlus}
+        language={language}
+        PreTag="div"
+        className="m-0! rounded-lg"
+      >
+        {codeText}
+      </SyntaxHighlighter>
+    </div>
+  );
+};
 
 export const ChatClient = ({
   messages,
@@ -39,14 +102,22 @@ export const ChatClient = ({
           {messages.map((message) => (
             <li
               key={message.id}
-              className={`p-3.5 rounded-2xl text-sm ${
+              className={`group relative p-3.5 rounded-2xl text-sm ${
                 message.role === 'user'
                   ? 'bg-secondary text-content-primary ml-auto max-w-[85%] rounded-br-sm'
                   : 'bg-content-primary text-primary mr-auto max-w-[85%] rounded-bl-sm'
               }`}
             >
-              <div className="text-xs opacity-70 mb-1 font-bold uppercase">
-                {message.role === 'user' ? 'Вы' : 'AI'}
+              <div className="flex justify-between items-center mb-1">
+                <div className="text-xs opacity-70 font-bold uppercase">
+                  {message.role === 'user' ? 'Вы' : 'AI'}
+                </div>
+                <CopyButton
+                  text={message.parts
+                    .filter((p) => p.type === 'text')
+                    .map((p) => (p as { text: string }).text)
+                    .join('')}
+                />
               </div>
               {message.parts.map((part, i) =>
                 part.type === 'text' ? (
@@ -61,15 +132,9 @@ export const ChatClient = ({
                         code({ inline, className, children, ...props }: any) {
                           const match = /language-(\w+)/.exec(className || '');
                           return !inline && match ? (
-                            <SyntaxHighlighter
-                              {...props}
-                              style={vscDarkPlus}
-                              language={match[1]}
-                              PreTag="div"
-                              className="rounded-lg mt-2! mb-2!"
-                            >
-                              {String(children).replace(/\n$/, '')}
-                            </SyntaxHighlighter>
+                            <CodeBlock language={match[1]} {...props}>
+                              {children}
+                            </CodeBlock>
                           ) : (
                             <code
                               {...props}
