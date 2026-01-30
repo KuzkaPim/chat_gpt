@@ -13,6 +13,7 @@
   "dependencies": {
     "@ai-sdk/openai": "^3.0.21",
     "@ai-sdk/react": "^3.0.57",
+    "@marsidev/react-turnstile": "^1.4.1",
     "@tailwindcss/typography": "^0.5.19",
     "ai": "^6.0.55",
     "clsx": "^2.1.1",

@@ -1,10 +1,12 @@
 import { Container } from '@/src/shared/ui';
 import TextareaAutosize from 'react-textarea-autosize';
 import { Mic, Send, Square } from 'lucide-react';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import SpeechRecognition from 'react-speech-recognition';
 import { ChatStatus } from 'ai';
 import { cn } from '@/src/shared/lib';
+import { Turnstile, TurnstileInstance } from '@marsidev/react-turnstile';
+import Link from 'next/link';
 
 interface FormProps {
   listening: boolean;
@@ -12,7 +14,7 @@ interface FormProps {
   resetTranscript: () => void;
   browserSupportsSpeechRecognition: boolean;
   status: ChatStatus;
-  sendMessage: (message: { text: string }) => void;
+  sendMessage: (message: { text: string }, token?: string) => void;
   setTaHeight: Dispatch<SetStateAction<number>>;
   stop: () => Promise<void>;
 }
@@ -28,7 +30,17 @@ export const Form = ({
   stop,
 }: FormProps) => {
   const [input, setInput] = useState('');
+  const [token, setToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileInstance>(null);
   const isLoading = status === 'submitted' || status === 'streaming';
+
+  const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
+  if (!SITE_KEY) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('NEXT_PUBLIC_TURNSTILE_SITE_KEY is missing in .env');
+    }
+  }
 
   const toggleRecording = () => {
     if (listening) {
@@ -47,13 +59,14 @@ export const Form = ({
   const handleSend = (e?: React.SubmitEvent) => {
     e?.preventDefault();
 
-    if (!input.trim()) return;
+    if (!input.trim() || !token) return;
 
     stopRecording();
-    sendMessage({ text: input });
+    sendMessage({ text: input }, token);
 
     setInput('');
     resetTranscript();
+    turnstileRef.current?.reset();
   };
 
   useEffect(() => {
@@ -118,13 +131,49 @@ export const Form = ({
             <button
               type="submit"
               aria-label="Отправить сообщение"
-              disabled={isLoading || !input.trim()}
+              disabled={isLoading || !input.trim() || !token}
               className="z-10 size-12 flex justify-center items-center pr-0.5 bg-content-primary hover:bg-content-primary/90 text-primary rounded-2xl transition active:scale-95 disabled:opacity-60 outline-none focus:ring focus:ring-primary"
             >
-              <Send size={22} />
+              <Send
+                size={22}
+                className={cn(
+                  !token && input.trim() && 'animate-pulse opacity-50'
+                )}
+              />
             </button>
           </div>
+
+          <div className="hidden">
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={SITE_KEY || ''}
+              onSuccess={(t) => setToken(t)}
+              onExpire={() => setToken(null)}
+              onError={() => setToken(null)}
+              options={{
+                action: 'submit-chat',
+                size: 'invisible',
+              }}
+            />
+          </div>
         </form>
+        <div className="text-center text-[10px] sm:text-xs text-content-primary mt-2 pb-1 opacity-60">
+          Protected by Cloudflare Turnstile.{' '}
+          <Link
+            href="/privacy"
+            className="underline hover:text-content-primary/80 transition-colors"
+          >
+            Privacy
+          </Link>{' '}
+          •{' '}
+          <Link
+            href="/terms"
+            className="underline hover:text-content-primary/80 transition-colors"
+          >
+            Terms
+          </Link>
+          . AI can make mistakes.
+        </div>
       </Container>
     </section>
   );

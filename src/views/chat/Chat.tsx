@@ -23,9 +23,9 @@ export const Chat = () => {
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
 
-  const submitMessage = (message: { text: string }) => {
+  const submitMessage = (message: { text: string }, token?: string) => {
     setIsChatting(true);
-    sendMessage(message);
+    sendMessage(message, { body: { token } });
   };
 
   return (

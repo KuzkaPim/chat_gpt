@@ -12,7 +12,40 @@ export const maxDuration = 30;
 
 export async function POST(req: Request) {
   try {
-    const { messages }: { messages: UIMessage[] } = await req.json();
+    const { messages, token }: { messages: UIMessage[]; token: string } =
+      await req.json();
+
+    const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
+
+    if (!TURNSTILE_SECRET_KEY) {
+      console.error('TURNSTILE_SECRET_KEY is missing in environment variables');
+      return new Response('Server configuration error', { status: 500 });
+    }
+
+    if (token) {
+      const forwardedFor = req.headers.get('x-forwarded-for');
+      const ip = forwardedFor ? forwardedFor.split(',')[0].trim() : '127.0.0.1';
+
+      const formData = new FormData();
+      formData.append('secret', TURNSTILE_SECRET_KEY);
+      formData.append('response', token);
+      formData.append('remoteip', ip);
+
+      const result = await fetch(
+        'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+        {
+          body: formData,
+          method: 'POST',
+        }
+      );
+
+      const outcome = await result.json();
+      if (!outcome.success) {
+        return new Response('Captcha verification failed', { status: 403 });
+      }
+    } else {
+      return new Response('Captcha token required', { status: 403 });
+    }
 
     const result = streamText({
       model: openai('gpt-4.1-nano'),
