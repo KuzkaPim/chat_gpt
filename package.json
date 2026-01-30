@@ -13,6 +13,7 @@
   "dependencies": {
     "@ai-sdk/openai": "^3.0.21",
     "@ai-sdk/react": "^3.0.57",
+    "@tailwindcss/typography": "^0.5.19",
     "ai": "^6.0.55",
     "clsx": "^2.1.1",
     "framer-motion": "^12.29.2",
@@ -22,8 +23,11 @@
     "prettier": "^3.8.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-markdown": "^10.1.0",
     "react-speech-recognition": "^4.0.1",
+    "react-syntax-highlighter": "^16.1.0",
     "react-textarea-autosize": "^8.5.9",
+    "remark-gfm": "^4.0.1",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
@@ -32,6 +36,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-speech-recognition": "^3.9.6",
+    "@types/react-syntax-highlighter": "^15.5.13",
     "@types/react-textarea-autosize": "^8.0.0",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",

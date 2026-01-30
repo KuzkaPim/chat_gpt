@@ -14,7 +14,7 @@ const Form = dynamic(() => import('./sections').then((m) => m.Form), {
 
 export const Chat = () => {
   const { messages, sendMessage, status, error, stop } = useChat();
-  const [taHeight, setTaHeight] = useState(44);
+  const [taHeight, setTaHeight] = useState(48);
   const [isChatting, setIsChatting] = useState(false);
   const {
     transcript,

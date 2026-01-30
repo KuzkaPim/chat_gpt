@@ -4,6 +4,11 @@ import { cn } from '@/src/shared/lib';
 import { Container } from '@/src/shared/ui';
 import { ChatStatus, UIDataTypes, UIMessage, UITools } from 'ai';
 
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
 interface ChatClientProps {
   messages: UIMessage<unknown, UIDataTypes, UITools>[];
   status: ChatStatus;
@@ -27,7 +32,7 @@ export const ChatClient = ({
         'min-h-screen scale-0 pt-2 transition duration-250 origin-top-right',
         isChatting && 'scale-100'
       )}
-      style={{ paddingBottom: `${taHeight + 16}px` }}
+      style={{ paddingBottom: `${Math.min(taHeight, 128) + 16}px` }}
     >
       <Container className="flex flex-col">
         <ul className="flex-1 flex flex-col gap-2">
@@ -44,7 +49,45 @@ export const ChatClient = ({
                 {message.role === 'user' ? 'Вы' : 'AI'}
               </div>
               {message.parts.map((part, i) =>
-                part.type === 'text' ? <div key={i}>{part.text}</div> : null
+                part.type === 'text' ? (
+                  <div
+                    key={i}
+                    className="text-inherit prose prose-sm max-w-none prose-headings:text-inherit prose-p:text-inherit prose-strong:text-inherit prose-li:text-inherit prose-code:text-inherit marker:text-inherit"
+                  >
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        code({ inline, className, children, ...props }: any) {
+                          const match = /language-(\w+)/.exec(className || '');
+                          return !inline && match ? (
+                            <SyntaxHighlighter
+                              {...props}
+                              style={vscDarkPlus}
+                              language={match[1]}
+                              PreTag="div"
+                              className="rounded-lg mt-2! mb-2!"
+                            >
+                              {String(children).replace(/\n$/, '')}
+                            </SyntaxHighlighter>
+                          ) : (
+                            <code
+                              {...props}
+                              className={cn(
+                                className,
+                                'bg-black/10 px-1 py-0.5 rounded font-mono text-[0.9em]'
+                              )}
+                            >
+                              {children}
+                            </code>
+                          );
+                        },
+                      }}
+                    >
+                      {part.text}
+                    </ReactMarkdown>
+                  </div>
+                ) : null
               )}
             </li>
           ))}
