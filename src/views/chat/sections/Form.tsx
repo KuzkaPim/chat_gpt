@@ -157,7 +157,7 @@ export const Form = ({
             />
           </div>
         </form>
-        <div className="text-center text-[10px] sm:text-xs text-content-primary mt-2 pb-1 opacity-60">
+        <div className="text-center text-[10px] sm:text-xs text-content-primary mt-2 opacity-60">
           Protected by Cloudflare Turnstile.{' '}
           <Link
             href="/privacy"

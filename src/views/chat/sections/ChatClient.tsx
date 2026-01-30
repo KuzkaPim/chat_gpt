@@ -92,10 +92,14 @@ export const ChatClient = ({
   return (
     <section
       className={cn(
-        'min-h-screen scale-0 pt-2 transition duration-250 origin-top-right',
+        'min-h-screen scale-0 pt-2 transition duration-250 origin-top-right pb-[calc(var(--ta-height)+52px)] sm:pb-[calc(var(--ta-height)+40px)]',
         isChatting && 'scale-100'
       )}
-      style={{ paddingBottom: `${Math.min(taHeight, 128) + 16}px` }}
+      style={
+        {
+          '--ta-height': `${Math.min(taHeight, 128)}px`,
+        } as React.CSSProperties
+      }
     >
       <Container className="flex flex-col">
         <ul className="flex-1 flex flex-col gap-2">
