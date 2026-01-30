@@ -104,8 +104,8 @@ export const ChatClient = ({
               key={message.id}
               className={`group relative p-3.5 rounded-2xl text-sm ${
                 message.role === 'user'
-                  ? 'bg-secondary text-content-primary ml-auto max-w-[85%] rounded-br-sm'
-                  : 'bg-content-primary text-primary mr-auto max-w-[85%] rounded-bl-sm'
+                  ? 'bg-secondary text-content-primary ml-auto min-w-[15%] max-w-[85%] rounded-br-sm'
+                  : 'bg-content-primary text-primary mr-auto min-w-[15%] max-w-[85%] rounded-bl-sm'
               }`}
             >
               <div className="flex justify-between items-center mb-1">
