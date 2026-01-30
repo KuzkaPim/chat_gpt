@@ -89,7 +89,7 @@ export const Form = ({
               aria-label="Голосовой ввод"
               onClick={toggleRecording}
               disabled={isLoading}
-              className="size-12 flex bg-content-primary hover:bg-content-primary/90 justify-center items-center rounded-2xl transition active:scale-95 outline-none focus:ring focus:ring-primary"
+              className="size-12 flex bg-content-primary hover:bg-content-primary/90 justify-center items-center rounded-2xl transition active:scale-95 outline-none focus:ring focus:ring-primary shadow-md"
             >
               <Mic
                 className={`${listening ? 'text-accent animate-pulse' : 'text-primary'}`}
@@ -101,7 +101,7 @@ export const Form = ({
           <TextareaAutosize
             minRows={1}
             maxRows={6}
-            className="flex-1 box-border min-h-12 p-3 max-h-32 bg-content-primary border-none rounded-2xl text-primary transition placeholder:text-primary/60 resize-none text-md outline-none focus:ring focus:ring-primary"
+            className="flex-1 box-border min-h-12 p-3 max-h-32 bg-content-primary border-none rounded-2xl text-primary transition placeholder:text-primary/60 resize-none text-md outline-none focus:ring focus:ring-primary shadow-md"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Сообщение..."
@@ -122,7 +122,7 @@ export const Form = ({
               aria-label="Остановить генерацию"
               onClick={stop}
               className={cn(
-                'z-0 scale-0 absolute size-10 flex justify-center items-center bg-content-primary hover:bg-content-primary/90 text-primary rounded-xl transition active:scale-95 disabled:opacity-60 outline-none focus:ring focus:ring-primary duration-250',
+                'z-0 scale-0 absolute size-10 flex justify-center items-center bg-content-primary hover:bg-content-primary/90 text-primary rounded-xl transition active:scale-95 disabled:opacity-60 outline-none focus:ring focus:ring-primary duration-250 shadow-md',
                 isLoading && 'translate-y-[-125%] scale-100'
               )}
             >
@@ -132,7 +132,7 @@ export const Form = ({
               type="submit"
               aria-label="Отправить сообщение"
               disabled={isLoading || !input.trim() || !token}
-              className="z-10 size-12 flex justify-center items-center pr-0.5 bg-content-primary hover:bg-content-primary/90 text-primary rounded-2xl transition active:scale-95 disabled:opacity-60 outline-none focus:ring focus:ring-primary"
+              className="z-10 size-12 flex justify-center items-center pr-0.5 bg-content-primary hover:bg-content-primary/90 text-primary rounded-2xl transition active:scale-95 disabled:opacity-60 outline-none focus:ring focus:ring-primary shadow-md"
             >
               <Send
                 size={22}
