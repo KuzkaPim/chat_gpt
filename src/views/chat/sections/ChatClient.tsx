@@ -147,6 +147,19 @@ export const ChatClient = ({
                             </code>
                           );
                         },
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        table({ children, ...props }: any) {
+                          return (
+                            <div className="overflow-x-auto my-4 max-w-full">
+                              <table
+                                {...props}
+                                className="w-full border-collapse"
+                              >
+                                {children}
+                              </table>
+                            </div>
+                          );
+                        },
                       }}
                     >
                       {part.text}
