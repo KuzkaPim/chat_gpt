@@ -3,8 +3,10 @@ import Link from 'next/link';
 
 export default function PrivacyPage() {
   return (
-    <Container className="py-12 prose prose-invert max-w-2xl mx-auto">
-      <h1>Политика конфиденциальности (Privacy Policy)</h1>
+    <Container className="py-8 sm:py-12 px-4 sm:px-0 prose prose-sm sm:prose-base prose-invert max-w-2xl mx-auto">
+      <h1 className="text-xl sm:text-3xl font-bold leading-tight">
+        Политика конфиденциальности (Privacy Policy)
+      </h1>
       <p className="text-sm opacity-70">
         Последнее обновление: {new Date().toLocaleDateString('ru-RU')}
       </p>
@@ -36,7 +38,7 @@ export default function PrivacyPage() {
         Ваши текстовые сообщения отправляются в OpenAI через API исключительно
         для генерации ответов.
       </p>
-      <div className="bg-white/5 p-4 rounded-lg border border-white/10 text-sm">
+      <div className="bg-white/5 p-3 sm:p-4 rounded-lg border border-white/10 text-xs sm:text-sm wrap-break-word">
         <strong>Важно:</strong> Пожалуйста, не отправляйте в чат личные данные,
         пароли или финансовую информацию. Хотя мы не сохраняем историю, данные
         обрабатываются на серверах OpenAI в соответствии с их

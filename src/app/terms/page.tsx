@@ -3,8 +3,10 @@ import Link from 'next/link';
 
 export default function TermsPage() {
   return (
-    <Container className="py-12 prose prose-invert max-w-2xl mx-auto">
-      <h1>Условия использования (Terms of Service)</h1>
+    <Container className="py-8 sm:py-12 px-4 sm:px-0 prose prose-sm sm:prose-base prose-invert max-w-2xl mx-auto">
+      <h1 className="text-xl sm:text-3xl font-bold leading-tight">
+        Условия использования (Terms of Service)
+      </h1>
       <p className="text-sm opacity-70">
         Последнее обновление: {new Date().toLocaleDateString('ru-RU')}
       </p>
