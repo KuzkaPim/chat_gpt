@@ -132,11 +132,10 @@ export const Form = ({ status, sendMessage, setTaHeight, stop }: FormProps) => {
               aria-label="Отправить сообщение"
               disabled={isLoading || !input.trim() || !token}
               className={cn(
-                'z-10 size-12 flex justify-center items-center pr-0.5 bg-content-primary hover:bg-content-primary/90 text-primary rounded-2xl transition active:scale-95 disabled:opacity-60 outline-none focus:ring focus:ring-primary shadow-md',
-                !token && 'animate-pulse'
+                'z-10 size-12 flex justify-center items-center pr-0.5 bg-content-primary hover:bg-content-primary/90 text-primary rounded-2xl transition active:scale-95 group/submit outline-none focus:ring focus:ring-primary shadow-md'
               )}
             >
-              <Send size={22} />
+              <Send size={22} className="group-disabled/submit:animate-pulse" />
             </button>
           </div>
 
