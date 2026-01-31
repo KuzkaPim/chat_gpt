@@ -9,7 +9,7 @@ export const Promo = ({ isChatting }: PromoProps) => {
   return (
     <section
       className={cn(
-        'absolute w-full pt-2 pb-22 min-h-screen flex items-center transition duration-250 origin-top-left',
+        'absolute w-full pt-2 pb-22 min-h-dvh flex items-center transition duration-250 origin-top-left',
         isChatting && 'scale-0 pointer-events-none'
       )}
     >

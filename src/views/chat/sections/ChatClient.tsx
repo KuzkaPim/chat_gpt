@@ -92,7 +92,7 @@ export const ChatClient = ({
   return (
     <section
       className={cn(
-        'min-h-screen scale-0 pt-2 transition duration-250 origin-top-right pb-[calc(var(--ta-height)+52px)] sm:pb-[calc(var(--ta-height)+40px)]',
+        'min-h-dvh scale-0 pt-2 transition duration-250 origin-top-right pb-[calc(var(--ta-height)+52px)] sm:pb-[calc(var(--ta-height)+40px)]',
         isChatting && 'scale-100'
       )}
       style={

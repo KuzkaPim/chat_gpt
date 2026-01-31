@@ -80,7 +80,10 @@ export const Form = ({
   }, [transcript]);
 
   return (
-    <section className="fixed bottom-2 w-full">
+    <section
+      className="fixed w-full"
+      style={{ bottom: 'max(env(safe-area-inset-bottom), 0.5rem)' }}
+    >
       <Container>
         <form className="flex gap-1.5 sm:gap-2 items-end" onSubmit={handleSend}>
           {browserSupportsSpeechRecognition && (
