@@ -139,7 +139,7 @@ export const Form = ({ status, sendMessage, setTaHeight, stop }: FormProps) => {
             </button>
           </div>
 
-          <div className="hidden">
+          <div className="absolute opacity-0 pointer-events-none">
             <Turnstile
               ref={turnstileRef}
               siteKey={SITE_KEY || ''}
