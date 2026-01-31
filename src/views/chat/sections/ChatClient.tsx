@@ -92,12 +92,12 @@ export const ChatClient = ({
   return (
     <section
       className={cn(
-        'min-h-dvh scale-0 pt-2 transition duration-250 origin-top-right pb-[calc(var(--ta-height)+52px)] sm:pb-[calc(var(--ta-height)+40px)]',
+        'min-h-dvh scale-0 pt-2 transition duration-250 origin-top-right pb-[calc(var(--ta-height))]',
         isChatting && 'scale-100'
       )}
       style={
         {
-          '--ta-height': `${Math.min(taHeight, 128)}px`,
+          '--ta-height': `${Math.min(taHeight, 128) + 52}px`,
         } as React.CSSProperties
       }
     >

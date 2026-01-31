@@ -16,7 +16,7 @@ export const Promo = ({ isChatting }: PromoProps) => {
       <Container className="relative text-content-primary text-center">
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0">
           <div
-            className="w-50 h-50 rounded-full blur-2xl opacity-50"
+            className="w-50 h-50 rounded-full blur-3xl opacity-30"
             style={{
               background:
                 'radial-gradient(ellipse at center, rgba(239,68,68,1) 0%, rgba(239,68,68,1) 40%)',
