@@ -3,14 +3,12 @@
 
 @theme {
   --color-primary: var(--color-primary);
-  --color-secondary: var(--color-secondary);
   --color-content-primary: var(--color-content-primary);
   --color-accent: var(--color-accent);
 }
 
 :root {
-  --color-primary: hsl(217, 86%, 22%);
-  --color-secondary: hsl(217, 68%, 36%);
+  --color-primary: hsl(0, 0, 10%);
   --color-content-primary: hsl(217, 68%, 95%);
   --color-accent: hsl(0, 100%, 40%);
 }
