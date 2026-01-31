@@ -2,33 +2,28 @@ import { Container } from '@/src/shared/ui';
 import TextareaAutosize from 'react-textarea-autosize';
 import { Mic, Send, Square } from 'lucide-react';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
-import SpeechRecognition from 'react-speech-recognition';
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from 'react-speech-recognition';
 import { ChatStatus } from 'ai';
 import { cn } from '@/src/shared/lib';
 import { Turnstile, TurnstileInstance } from '@marsidev/react-turnstile';
 import Link from 'next/link';
 
 interface FormProps {
-  listening: boolean;
-  transcript: string;
-  resetTranscript: () => void;
-  browserSupportsSpeechRecognition: boolean;
   status: ChatStatus;
   sendMessage: (message: { text: string }, token?: string) => void;
   setTaHeight: Dispatch<SetStateAction<number>>;
   stop: () => Promise<void>;
 }
 
-export const Form = ({
-  listening,
-  transcript,
-  resetTranscript,
-  browserSupportsSpeechRecognition,
-  status,
-  sendMessage,
-  setTaHeight,
-  stop,
-}: FormProps) => {
+export const Form = ({ status, sendMessage, setTaHeight, stop }: FormProps) => {
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
   const [input, setInput] = useState('');
   const [token, setToken] = useState<string | null>(null);
   const turnstileRef = useRef<TurnstileInstance>(null);

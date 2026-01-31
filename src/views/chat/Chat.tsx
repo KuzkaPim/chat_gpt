@@ -3,7 +3,6 @@
 import dynamic from 'next/dynamic';
 
 import { useChat } from '@ai-sdk/react';
-import { useSpeechRecognition } from 'react-speech-recognition';
 import { FormSkeleton, Promo } from './sections';
 import { useState } from 'react';
 
@@ -23,12 +22,6 @@ export const Chat = () => {
   const { messages, sendMessage, status, error, stop } = useChat();
   const [taHeight, setTaHeight] = useState(48);
   const [isChatting, setIsChatting] = useState(false);
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
 
   const submitMessage = (message: { text: string }, token?: string) => {
     setIsChatting(true);
@@ -46,10 +39,6 @@ export const Chat = () => {
         error={error}
       />
       <Form
-        listening={listening}
-        transcript={transcript}
-        resetTranscript={resetTranscript}
-        browserSupportsSpeechRecognition={browserSupportsSpeechRecognition}
         status={status}
         sendMessage={submitMessage}
         setTaHeight={setTaHeight}
