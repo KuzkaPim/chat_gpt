@@ -54,12 +54,13 @@ export const Form = ({ status, sendMessage, setTaHeight, stop }: FormProps) => {
   const handleSend = (e?: React.SubmitEvent) => {
     e?.preventDefault();
 
-    if (!input.trim() || !token) return;
+    if (!input.trim() || !token || isLoading) return;
 
     stopRecording();
     sendMessage({ text: input }, token);
 
     setInput('');
+    setToken(null);
     resetTranscript();
     turnstileRef.current?.reset();
   };
@@ -130,14 +131,12 @@ export const Form = ({ status, sendMessage, setTaHeight, stop }: FormProps) => {
               type="submit"
               aria-label="Отправить сообщение"
               disabled={isLoading || !input.trim() || !token}
-              className="z-10 size-12 flex justify-center items-center pr-0.5 bg-content-primary hover:bg-content-primary/90 text-primary rounded-2xl transition active:scale-95 disabled:opacity-60 outline-none focus:ring focus:ring-primary shadow-md"
+              className={cn(
+                'z-10 size-12 flex justify-center items-center pr-0.5 bg-content-primary hover:bg-content-primary/90 text-primary rounded-2xl transition active:scale-95 disabled:opacity-60 outline-none focus:ring focus:ring-primary shadow-md',
+                !token && 'animate-pulse'
+              )}
             >
-              <Send
-                size={22}
-                className={cn(
-                  !token && input.trim() && 'animate-pulse opacity-50'
-                )}
-              />
+              <Send size={22} />
             </button>
           </div>
 

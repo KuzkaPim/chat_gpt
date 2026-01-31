@@ -19,7 +19,10 @@ export async function POST(req: Request) {
 
     if (!TURNSTILE_SECRET_KEY) {
       console.error('TURNSTILE_SECRET_KEY is missing in environment variables');
-      return new Response('Server configuration error', { status: 500 });
+      return new Response(
+        'Ошибка конфигурации сервера. Пожалуйста, сообщите администратору.',
+        { status: 500 }
+      );
     }
 
     if (token) {
@@ -41,10 +44,15 @@ export async function POST(req: Request) {
 
       const outcome = await result.json();
       if (!outcome.success) {
-        return new Response('Captcha verification failed', { status: 403 });
+        return new Response(
+          'Проверка безопасности не пройдена. Пожалуйста, попробуйте еще раз.',
+          { status: 403 }
+        );
       }
     } else {
-      return new Response('Captcha token required', { status: 403 });
+      return new Response('Требуется проверка безопасности (Captcha).', {
+        status: 403,
+      });
     }
 
     const result = streamText({
@@ -60,7 +68,7 @@ export async function POST(req: Request) {
         } else if (InvalidToolInputError.isInstance(error)) {
           return 'Модель предоставила неверные входные данные для инструмента.';
         } else if (APICallError.isInstance(error)) {
-          return `Ошибка API`;
+          return `Произошла ошибка при обращении к языковой модели. Попробуйте позже.`;
         } else if (typeof error === 'object') {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const type = (error as any).error?.type;
