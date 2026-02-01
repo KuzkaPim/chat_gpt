@@ -140,15 +140,10 @@ export const Form = ({ status, sendMessage, setTaHeight, stop }: FormProps) => {
           </div>
 
           <div
+            className="fixed bottom-4 right-4 z-9999"
             style={{
-              position: 'fixed',
-              top: '-100px',
-              left: '-100px',
-              width: '1px',
-              height: '1px',
-              zIndex: -1,
-              opacity: 0.1,
-              pointerEvents: 'none',
+              opacity: 1,
+              pointerEvents: 'auto',
             }}
           >
             <Turnstile
@@ -168,7 +163,7 @@ export const Form = ({ status, sendMessage, setTaHeight, stop }: FormProps) => {
               }}
               options={{
                 action: 'submit-chat',
-                size: 'invisible',
+                size: 'compact',
               }}
             />
           </div>
