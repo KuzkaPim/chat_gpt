@@ -10,49 +10,66 @@ import { openai } from '@ai-sdk/openai';
 
 export const maxDuration = 30;
 
+import { cookies } from 'next/headers';
+
 export async function POST(req: Request) {
   try {
-    const { messages, token }: { messages: UIMessage[]; token: string } =
+    const { messages, token }: { messages: UIMessage[]; token?: string } =
       await req.json();
 
-    const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
+    const cookieStore = await cookies();
+    const isVerified = cookieStore.get('cf-verified');
 
-    if (!TURNSTILE_SECRET_KEY) {
-      console.error('TURNSTILE_SECRET_KEY is missing in environment variables');
-      return new Response(
-        'Ошибка конфигурации сервера. Пожалуйста, сообщите администратору.',
-        { status: 500 }
-      );
-    }
+    if (!isVerified) {
+      if (token) {
+        const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
 
-    if (token) {
-      const forwardedFor = req.headers.get('x-forwarded-for');
-      const ip = forwardedFor ? forwardedFor.split(',')[0].trim() : '127.0.0.1';
-
-      const formData = new FormData();
-      formData.append('secret', TURNSTILE_SECRET_KEY);
-      formData.append('response', token);
-      formData.append('remoteip', ip);
-
-      const result = await fetch(
-        'https://challenges.cloudflare.com/turnstile/v0/siteverify',
-        {
-          body: formData,
-          method: 'POST',
+        if (!TURNSTILE_SECRET_KEY) {
+          console.error(
+            'TURNSTILE_SECRET_KEY is missing in environment variables'
+          );
+          return new Response('Ошибка конфигурации сервера.', { status: 500 });
         }
-      );
 
-      const outcome = await result.json();
-      if (!outcome.success) {
-        return new Response(
-          'Проверка безопасности не пройдена. Пожалуйста, попробуйте еще раз.',
-          { status: 403 }
+        const forwardedFor = req.headers.get('x-forwarded-for');
+        const ip = forwardedFor
+          ? forwardedFor.split(',')[0].trim()
+          : '127.0.0.1';
+
+        const formData = new FormData();
+        formData.append('secret', TURNSTILE_SECRET_KEY);
+        formData.append('response', token);
+        formData.append('remoteip', ip);
+
+        const result = await fetch(
+          'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+          {
+            body: formData,
+            method: 'POST',
+          }
         );
+
+        const outcome = await result.json();
+
+        if (outcome.success) {
+          // Set verification cookie for future requests
+          cookieStore.set('cf-verified', 'true', {
+            httpOnly: false,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 60 * 60 * 24, // 24 hours
+            path: '/',
+          });
+        } else {
+          return new Response('Ошибка проверки безопасности.', {
+            status: 403,
+          });
+        }
+      } else {
+        return new Response('Требуется проверка безопасности (Captcha).', {
+          status: 403,
+        });
       }
-    } else {
-      return new Response('Требуется проверка безопасности (Captcha).', {
-        status: 403,
-      });
     }
 
     const result = streamText({

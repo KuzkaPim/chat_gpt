@@ -1,6 +1,6 @@
 import { Container } from '@/src/shared/ui';
 import TextareaAutosize from 'react-textarea-autosize';
-import { Mic, Send, Square } from 'lucide-react';
+import { Mic, Send, Square, ShieldCheck } from 'lucide-react';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -9,15 +9,25 @@ import { ChatStatus } from 'ai';
 import { cn } from '@/src/shared/lib';
 import { Turnstile, TurnstileInstance } from '@marsidev/react-turnstile';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 interface FormProps {
   status: ChatStatus;
   sendMessage: (message: { text: string }, token?: string) => void;
   setTaHeight: Dispatch<SetStateAction<number>>;
   stop: () => Promise<void>;
+  isVerified: boolean;
+  setIsVerified: Dispatch<SetStateAction<boolean>>;
 }
 
-export const Form = ({ status, sendMessage, setTaHeight, stop }: FormProps) => {
+export const Form = ({
+  status,
+  sendMessage,
+  setTaHeight,
+  stop,
+  isVerified,
+  setIsVerified,
+}: FormProps) => {
   const {
     transcript,
     listening,
@@ -27,6 +37,7 @@ export const Form = ({ status, sendMessage, setTaHeight, stop }: FormProps) => {
   const [input, setInput] = useState('');
   const [token, setToken] = useState<string | null>(null);
   const turnstileRef = useRef<TurnstileInstance>(null);
+
   const isLoading = status === 'submitted' || status === 'streaming';
 
   const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
@@ -51,18 +62,20 @@ export const Form = ({ status, sendMessage, setTaHeight, stop }: FormProps) => {
     }
   };
 
-  const handleSend = (e?: React.SubmitEvent) => {
+  const handleSend = async (e?: React.FormEvent) => {
     e?.preventDefault();
 
-    if (!input.trim() || !token || isLoading) return;
+    if (!input.trim() || isLoading) return;
+    if (!isVerified && !token) return;
 
     stopRecording();
-    sendMessage({ text: input }, token);
-
+    sendMessage({ text: input }, token ?? undefined);
+    if (token) {
+      localStorage.setItem('cf-verified', 'true');
+    }
     setInput('');
     setToken(null);
     resetTranscript();
-    turnstileRef.current?.reset();
   };
 
   useEffect(() => {
@@ -77,10 +90,56 @@ export const Form = ({ status, sendMessage, setTaHeight, stop }: FormProps) => {
 
   return (
     <section
-      className="fixed w-full"
+      className="fixed w-full z-50"
       style={{ bottom: 'max(env(safe-area-inset-bottom), 0.5rem)' }}
     >
       <Container>
+        <motion.div
+          initial={false}
+          animate={{
+            height: isVerified ? 0 : 'auto',
+            opacity: isVerified ? 0 : 1,
+            marginBottom: isVerified ? 0 : 12,
+          }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          className="overflow-hidden"
+          style={{
+            visibility: isVerified ? 'hidden' : 'visible',
+            pointerEvents: isVerified ? 'none' : 'auto',
+          }}
+        >
+          <div className="bg-content-primary/50 backdrop-blur-md border border-content-primary/20 p-3 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
+            <div className="flex items-center gap-2 text-primary/80">
+              <ShieldCheck size={18} className="text-accent" />
+              <span className="text-xs font-medium">
+                Подтвердите, что вы человек
+              </span>
+            </div>
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={SITE_KEY || ''}
+              onSuccess={(t) => {
+                console.log('Turnstile success');
+                setToken(t);
+                setIsVerified(true);
+              }}
+              onExpire={() => {
+                console.warn('Turnstile expired');
+                setToken(null);
+              }}
+              onError={(e) => {
+                console.error('Turnstile error:', e);
+                setToken(null);
+              }}
+              options={{
+                action: 'submit-chat',
+                size: 'compact',
+                theme: 'dark',
+              }}
+            />
+          </div>
+        </motion.div>
+
         <form className="flex gap-1.5 sm:gap-2 items-end" onSubmit={handleSend}>
           {browserSupportsSpeechRecognition && (
             <button
@@ -130,42 +189,13 @@ export const Form = ({ status, sendMessage, setTaHeight, stop }: FormProps) => {
             <button
               type="submit"
               aria-label="Отправить сообщение"
-              disabled={isLoading || !input.trim() || !token}
+              disabled={isLoading || !input.trim() || (!isVerified && !token)}
               className={cn(
                 'z-10 size-12 flex justify-center items-center pr-0.5 bg-content-primary hover:bg-content-primary/90 text-primary rounded-2xl transition active:scale-95 group/submit outline-none focus:ring focus:ring-primary shadow-md'
               )}
             >
               <Send size={22} className="group-disabled/submit:animate-pulse" />
             </button>
-          </div>
-
-          <div
-            className="fixed bottom-4 right-4 z-9999"
-            style={{
-              opacity: 1,
-              pointerEvents: 'auto',
-            }}
-          >
-            <Turnstile
-              ref={turnstileRef}
-              siteKey={SITE_KEY || ''}
-              onSuccess={(t) => {
-                console.log('Turnstile success');
-                setToken(t);
-              }}
-              onExpire={() => {
-                console.warn('Turnstile expired');
-                setToken(null);
-              }}
-              onError={(e) => {
-                console.error('Turnstile error:', e);
-                setToken(null);
-              }}
-              options={{
-                action: 'submit-chat',
-                size: 'compact',
-              }}
-            />
           </div>
         </form>
         <div className="text-center text-[10px] sm:text-xs text-content-primary mt-2 opacity-60">
