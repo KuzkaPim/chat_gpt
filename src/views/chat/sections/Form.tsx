@@ -139,13 +139,33 @@ export const Form = ({ status, sendMessage, setTaHeight, stop }: FormProps) => {
             </button>
           </div>
 
-          <div className="absolute opacity-0 pointer-events-none">
+          <div
+            style={{
+              position: 'fixed',
+              top: '-100px',
+              left: '-100px',
+              width: '1px',
+              height: '1px',
+              zIndex: -1,
+              opacity: 0.1,
+              pointerEvents: 'none',
+            }}
+          >
             <Turnstile
               ref={turnstileRef}
               siteKey={SITE_KEY || ''}
-              onSuccess={(t) => setToken(t)}
-              onExpire={() => setToken(null)}
-              onError={() => setToken(null)}
+              onSuccess={(t) => {
+                console.log('Turnstile success');
+                setToken(t);
+              }}
+              onExpire={() => {
+                console.warn('Turnstile expired');
+                setToken(null);
+              }}
+              onError={(e) => {
+                console.error('Turnstile error:', e);
+                setToken(null);
+              }}
               options={{
                 action: 'submit-chat',
                 size: 'invisible',
