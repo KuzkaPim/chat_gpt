@@ -52,12 +52,11 @@ export async function POST(req: Request) {
         const outcome = await result.json();
 
         if (outcome.success) {
-          // Set verification cookie for future requests
           cookieStore.set('cf-verified', 'true', {
             httpOnly: false,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
-            maxAge: 60 * 60 * 24, // 24 hours
+            maxAge: 60 * 60 * 24,
             path: '/',
           });
         } else {
